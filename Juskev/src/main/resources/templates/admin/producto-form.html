@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${accion} + ' — JUSKEV Admin'">Producto — JUSKEV Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <style>
+    .colores-builder { display:flex; flex-direction:column; gap:10px; }
+    .colores-lista   { display:flex; flex-wrap:wrap; gap:8px; align-items:center; min-height:36px; }
+    .color-chip {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 10px 4px 6px; border-radius:20px;
+      background:#f0ede8; font-size:0.8rem; cursor:default;
+    }
+    .color-chip .swatch { width:18px;height:18px;border-radius:50%;border:1px solid #ccc;flex-shrink:0; }
+    .color-chip .remove-color { cursor:pointer; font-size:1rem; line-height:1; color:#999; }
+    .color-chip .remove-color:hover { color:#c0392b; }
+    .color-add-row { display:flex; gap:8px; align-items:center; }
+    .color-add-row input[type="color"] { width:44px;height:36px;border:1px solid #ccc;border-radius:4px;cursor:pointer;padding:2px; }
+    .btn-add-color { padding:6px 14px; background:var(--dark); color:var(--gold); border:1px solid var(--gold); border-radius:4px; font-size:0.82rem; cursor:pointer; }
+    .imgs-extra-grid { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px; }
+    .img-extra-item  { position:relative; width:90px; height:90px; }
+    .img-extra-item img { width:100%;height:100%;object-fit:cover;border-radius:6px;border:1px solid #e0ddd6; }
+    .img-extra-item .del-img {
+      position:absolute;top:-6px;right:-6px;background:#c0392b;color:#fff;
+      border:none;border-radius:50%;width:20px;height:20px;font-size:13px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+    }
+    .tallas-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+    .talla-chip { padding:5px 14px; border:1px solid #ccc; border-radius:4px; font-size:0.82rem; cursor:pointer; background:#fff; transition:all .15s; }
+    .talla-chip.active { background:var(--dark); color:var(--gold); border-color:var(--dark); }
+    .tallas-custom-row { display:flex; gap:8px; align-items:center; margin-top:6px; }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-page-title" th:text="${accion}">Producto</h1>
+      <a th:href="@{/admin/productos}" class="btn-volver">← Volver</a>
+    </div>
+
+    <div th:if="${exito}" class="alert-exito" th:text="${exito}"></div>
+    <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+
+    <div class="admin-card form-card">
+      <form th:action="@{/admin/productos/guardar}" method="post"
+            enctype="multipart/form-data" class="producto-form">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" name="id" th:value="${producto.id}"/>
+        <input type="hidden" name="colores" id="coloresHidden" th:value="${producto.colores}"/>
+        <input type="hidden" name="imagenesExtra" id="imagenesExtraHidden" th:value="${producto.imagenesExtra}"/>
+        <!-- Preservar imagen actual si no se sube una nueva -->
+        <input type="hidden" name="imagenUrl" th:value="${producto.imagenUrl}"/>
+
+        <div class="form-grid">
+
+          <!-- Nombre -->
+          <div class="form-group full-width">
+            <label class="form-label">Nombre del Producto *</label>
+            <input type="text" name="nombre" class="form-input"
+                   th:value="${producto.nombre}" placeholder="Ej: Blazer Oxford Slim" required>
+          </div>
+
+          <!-- Marca -->
+          <div class="form-group">
+            <label class="form-label">Marca *</label>
+            <input type="text" name="marca" class="form-input"
+                   th:value="${producto.marca}" placeholder="Ej: JUSKEV Studio" required>
+          </div>
+
+          <!-- Categoría -->
+          <div class="form-group">
+            <label class="form-label">Categoría *</label>
+            <select name="categoria" class="form-input" required>
+              <option value="">Selecciona...</option>
+              <option th:each="cat : ${categorias}"
+                      th:value="${cat.name()}"
+                      th:text="${#strings.capitalize(cat.name())}"
+                      th:selected="${producto.categoria != null and producto.categoria.name() == cat.name()}">
+              </option>
+            </select>
+          </div>
+
+          <!-- Precio -->
+          <div class="form-group">
+            <label class="form-label">Precio Base (COP) *</label>
+            <input type="number" name="precio" class="form-input"
+                   th:value="${producto.precio}" placeholder="320000" min="0" required>
+          </div>
+
+          <!-- Descuento -->
+          <div class="form-group">
+            <label class="form-label">Descuento % (0 = sin descuento)</label>
+            <input type="number" name="descuento" class="form-input"
+                   th:value="${producto.descuento ?: 0}" min="0" max="100" placeholder="0">
+            <small class="form-hint">El precio final se calcula automáticamente.</small>
+          </div>
+
+          <!-- Stock -->
+          <div class="form-group">
+            <label class="form-label">Stock (unidades) *</label>
+            <input type="number" name="stock" class="form-input"
+                   th:value="${producto.stock ?: 0}" min="0" required>
+          </div>
+
+          <!-- Tallas chips -->
+          <div class="form-group full-width">
+            <label class="form-label">Tallas disponibles</label>
+            <div class="tallas-chips" id="tallasChips">
+              <span class="talla-chip" data-val="XS">XS</span>
+              <span class="talla-chip" data-val="S">S</span>
+              <span class="talla-chip" data-val="M">M</span>
+              <span class="talla-chip" data-val="L">L</span>
+              <span class="talla-chip" data-val="XL">XL</span>
+              <span class="talla-chip" data-val="XXL">XXL</span>
+              <span class="talla-chip" data-val="28">28</span>
+              <span class="talla-chip" data-val="30">30</span>
+              <span class="talla-chip" data-val="32">32</span>
+              <span class="talla-chip" data-val="34">34</span>
+              <span class="talla-chip" data-val="36">36</span>
+            </div>
+            <div class="tallas-custom-row">
+              <input type="text" id="tallaCustom" class="form-input" placeholder="Otra talla..." style="width:140px">
+              <button type="button" class="btn-add-color" onclick="agregarTallaCustom()">+ Agregar</button>
+            </div>
+            <input type="hidden" name="tallas" id="tallasHidden" th:value="${producto.tallas}">
+            <small class="form-hint">Clic para seleccionar/deseleccionar. Las oscuras estarán disponibles.</small>
+          </div>
+
+          <!-- Colores picker -->
+          <div class="form-group full-width">
+            <label class="form-label">Colores disponibles</label>
+            <div class="colores-builder">
+              <div class="colores-lista" id="coloresLista"></div>
+              <div class="color-add-row">
+                <input type="color" id="colorPicker" value="#1a1a1a">
+                <input type="text" id="colorNombre" class="form-input" placeholder="Ej: Negro" style="width:110px">
+                <button type="button" class="btn-add-color" onclick="agregarColor()">+ Agregar</button>
+              </div>
+            </div>
+            <small class="form-hint">El valor guardado es el hex del color (ej: #1a1a1a).</small>
+          </div>
+
+          <!-- Badge -->
+          <div class="form-group">
+            <label class="form-label">Etiqueta (badge)</label>
+            <select name="badge" class="form-input">
+              <option value="">Sin etiqueta</option>
+              <option th:selected="${producto.badge == 'Nuevo'}" value="Nuevo">Nuevo</option>
+              <option th:selected="${producto.badge == 'Sale'}" value="Sale">Sale</option>
+              <option th:selected="${producto.badge == 'Limitado'}" value="Limitado">Limitado</option>
+            </select>
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group full-width">
+            <label class="form-label">Descripción *</label>
+            <textarea name="descripcion" class="form-input form-textarea" rows="4"
+                      placeholder="Describe el producto en detalle..." required
+                      th:text="${producto.descripcion}"></textarea>
+          </div>
+
+          <!-- Imagen principal -->
+          <div class="form-group full-width">
+            <label class="form-label">Imagen principal</label>
+            <input type="file" name="imagen" class="form-input" accept="image/*"
+                   onchange="previsualizarImagen(this)">
+            <div class="img-preview-wrap">
+              <img id="imgPreview"
+                   th:src="${producto.imagenUrl}"
+                   th:if="${producto.imagenUrl != null}"
+                   onerror="this.style.display='none'"
+                   class="img-preview">
+            </div>
+            <small class="form-hint">JPG, PNG, WEBP. Máximo 10MB.</small>
+          </div>
+
+          <!-- Imágenes extra -->
+          <div class="form-group full-width">
+            <label class="form-label">Imágenes adicionales (hasta 5)</label>
+            <div class="imgs-extra-grid" id="imgExtraGrid"></div>
+            <input type="file" name="imagenesNuevas" id="inputImagenesExtra"
+                   class="form-input" accept="image/*" multiple
+                   onchange="previsualizarExtras(this)">
+            <small class="form-hint">Selecciona varias fotos a la vez para distintas perspectivas.</small>
+          </div>
+
+          <!-- Opciones especiales -->
+          <div class="form-group full-width checkboxes-group">
+            <label class="checkbox-label">
+              <input type="checkbox" name="enCarrusel" th:checked="${producto.enCarrusel}">
+              Mostrar en carrusel del inicio
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="enOferta" th:checked="${producto.enOferta}">
+              Marcar como oferta especial
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="activo" th:checked="${producto.activo}" checked>
+              Producto activo (visible en la tienda)
+            </label>
+          </div>
+
+          <!-- Campos carrusel -->
+          <div class="form-group full-width carrusel-fields" id="carruselFields"
+               th:classappend="${producto.enCarrusel} ? '' : 'hidden'">
+            <label class="form-label">Tag del carrusel (ej: "Nueva Colección 2025")</label>
+            <input type="text" name="carruselTag" class="form-input"
+                   th:value="${producto.carruselTag}" placeholder="Nueva Colección 2025">
+            <label class="form-label" style="margin-top:12px">Título del carrusel</label>
+            <input type="text" name="carruselTitulo" class="form-input"
+                   th:value="${producto.carruselTitulo}" placeholder="El Arte del Estilo">
+            <label class="form-label" style="margin-top:12px">Descripción del carrusel</label>
+            <input type="text" name="carruselDescripcion" class="form-input"
+                   th:value="${producto.carruselDescripcion}" placeholder="Texto bajo el título">
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit-admin">💾 Guardar Producto</button>
+          <a th:href="@{/admin/productos}" class="btn-cancelar">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <script th:inline="javascript">
+    const coloresIniciales = /*[[${producto.colores}]]*/ '';
+    const tallasIniciales  = /*[[${producto.tallas}]]*/  '';
+
+    // ── TALLAS ──
+    let tallasSeleccionadas = tallasIniciales
+      ? tallasIniciales.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+    function renderTallas() {
+      document.querySelectorAll('#tallasChips .talla-chip').forEach(chip => {
+        chip.classList.toggle('active', tallasSeleccionadas.includes(chip.dataset.val));
+      });
+      document.getElementById('tallasHidden').value = tallasSeleccionadas.join(',');
+    }
+
+    document.querySelectorAll('#tallasChips .talla-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const v = chip.dataset.val;
+        const i = tallasSeleccionadas.indexOf(v);
+        if (i === -1) tallasSeleccionadas.push(v); else tallasSeleccionadas.splice(i, 1);
+        renderTallas();
+      });
+    });
+
+    function agregarTallaCustom() {
+      const input = document.getElementById('tallaCustom');
+      const v = input.value.trim().toUpperCase();
+      if (!v || tallasSeleccionadas.includes(v)) { input.value = ''; return; }
+      if (!document.querySelector('#tallasChips [data-val="' + v + '"]')) {
+        const chip = document.createElement('span');
+        chip.className = 'talla-chip'; chip.dataset.val = v; chip.textContent = v;
+        chip.addEventListener('click', () => {
+          const i = tallasSeleccionadas.indexOf(v);
+          if (i === -1) tallasSeleccionadas.push(v); else tallasSeleccionadas.splice(i, 1);
+          renderTallas();
+        });
+        document.getElementById('tallasChips').appendChild(chip);
+      }
+      tallasSeleccionadas.push(v);
+      input.value = '';
+      renderTallas();
+    }
+    renderTallas();
+
+    // ── COLORES ──
+    let coloresData = coloresIniciales
+      ? coloresIniciales.split(',').map(h => ({ hex: h.trim(), nombre: '' })).filter(c => c.hex) : [];
+
+    function renderColores() {
+      const lista = document.getElementById('coloresLista');
+      lista.innerHTML = '';
+      coloresData.forEach((c, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'color-chip';
+        chip.innerHTML = '<span class="swatch" style="background:' + c.hex + '"></span>'
+          + '<span>' + (c.nombre || c.hex) + '</span>'
+          + '<span class="remove-color" data-idx="' + i + '">×</span>';
+        lista.appendChild(chip);
+      });
+      lista.querySelectorAll('.remove-color').forEach(btn => {
+        btn.addEventListener('click', () => { coloresData.splice(+btn.dataset.idx, 1); renderColores(); });
+      });
+      document.getElementById('coloresHidden').value = coloresData.map(c => c.hex).join(',');
+    }
+
+    function agregarColor() {
+      const hex    = document.getElementById('colorPicker').value;
+      const nombre = document.getElementById('colorNombre').value.trim();
+      if (coloresData.find(c => c.hex === hex)) return;
+      coloresData.push({ hex, nombre });
+      document.getElementById('colorNombre').value = '';
+      renderColores();
+    }
+    renderColores();
+
+    // ── IMÁGENES ──
+    function previsualizarImagen(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          let img = document.getElementById('imgPreview');
+          if (!img) { img = document.createElement('img'); img.id = 'imgPreview'; img.className = 'img-preview'; input.parentNode.appendChild(img); }
+          img.src = e.target.result; img.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Mostrar imágenes extra ya guardadas (modo edición)
+    (function() {
+      const val = document.getElementById('imagenesExtraHidden').value;
+      if (!val) return;
+      const grid = document.getElementById('imgExtraGrid');
+      val.split(',').filter(Boolean).forEach(url => {
+        const wrap = document.createElement('div');
+        wrap.className = 'img-extra-item'; wrap.dataset.url = url;
+        wrap.innerHTML = '<img src="' + url + '" onerror="this.src=\'/img/logo.png\'">'
+          + '<button type="button" class="del-img">×</button>';
+        wrap.querySelector('.del-img').addEventListener('click', () => { wrap.remove(); syncImagenesHidden(); });
+        grid.appendChild(wrap);
+      });
+    })();
+
+    function syncImagenesHidden() {
+      const urls = [...document.querySelectorAll('#imgExtraGrid .img-extra-item[data-url]')].map(w => w.dataset.url);
+      document.getElementById('imagenesExtraHidden').value = urls.join(',');
+    }
+
+    function previsualizarExtras(input) {
+      const grid = document.getElementById('imgExtraGrid');
+      Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const wrap = document.createElement('div');
+          wrap.className = 'img-extra-item';
+          wrap.innerHTML = '<img src="' + e.target.result + '"><button type="button" class="del-img">×</button>';
+          wrap.querySelector('.del-img').addEventListener('click', () => wrap.remove());
+          grid.appendChild(wrap);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ── CARRUSEL ──
+    document.querySelector('[name="enCarrusel"]').addEventListener('change', function() {
+      document.getElementById('carruselFields').classList.toggle('hidden', !this.checked);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JUSKEV — Moda Masculina</title>
+  <link rel="icon" type="image/png" th:href="@{/img/logo recortado.png}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/inicio.css}">
+  <!-- CSRF para fetch/logout desde JS -->
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <!-- Indica al JS si el usuario tiene sesión activa -->
+  <meta name="user-authenticated" sec:authorize="isAuthenticated() and !isAnonymous()" content="true"/>
+  <meta name="user-authenticated" sec:authorize="isAnonymous()" content="false"/>
+</head>
+<body>
+
+  <!-- Mensaje bienvenida después de registro -->
+  <div th:if="${mensajeBienvenida}" class="welcome-toast" th:text="${mensajeBienvenida}"></div>
+
+  <!-- NAVBAR -->
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+
+
+  <!-- ═══ CARRUSEL HERO ═══ -->
+  <div class="hero">
+    <div class="slides" id="slides">
+
+ <!-- ═══ GUÍA DE TALLAS ═══ -->
+  <div class="slide slide-static slide-guia">
+
+    <div class="slide-bg luxury-bg"></div>
+    <div class="slide-overlay"></div>
+
+    <div class="slide-content">
+      <div class="slide-tag">Guía Oficial</div>
+
+      <h1 class="slide-title">
+        Encuentra tu<br>
+        Talla Perfecta
+      </h1>
+
+      <p class="slide-desc">
+        Consulta nuestra guía completa de medidas
+        antes de realizar tu compra.
+      </p>
+
+      <a th:href="@{/guia-tallas}" class="btn-hero">
+        Ver guía de tallas
+      </a>
+    </div>
+
+    <div class="slide-product">
+      <img th:src="@{/img/gt.png}" alt="Guía de Tallas">
+    </div>
+
+  </div>
+
+
+      <!-- Slides dinámicos desde BD -->
+      <div th:each="producto, iter : ${carrusel}" class="slide">
+        <div class="slide-bg"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <div class="slide-tag" th:text="${producto.carruselTag ?: 'Nueva Colección'}"></div>
+          <h1 class="slide-title" th:text="${producto.carruselTitulo ?: producto.nombre}"></h1>
+          <p class="slide-desc" th:text="${producto.carruselDescripcion ?: producto.descripcion}"></p>
+          <a th:href="@{/catalogo}" class="btn-hero">Ver Catálogo</a>
+        </div>
+        <div class="slide-product">
+          <img th:src="${producto.imagenUrl ?: '/img/slide1.jpeg'}"
+               th:alt="${producto.nombre}">
+        </div>
+        
+      </div>
+
+
+<!-- ═══ SLIDE EXTRA 2 ═══ -->
+
+<div class="slide slide-static">
+
+  <div class="slide-bg dark-bg"></div>
+  <div class="slide-overlay"></div>
+
+  <div class="slide-content">
+
+    <div class="slide-tag">New Collection</div>
+
+    <h1 class="slide-title">
+      Moda<br>
+      Masculina<br>
+      Premium
+    </h1>
+
+    <p class="slide-desc">
+      Diseños exclusivos inspirados
+      en tendencias internacionales.
+    </p>
+
+    <a th:href="@{/login}" class="btn-hero">
+      Comprar Ahora
+    </a>
+
+  </div>
+
+  <div class="slide-product">
+    <img th:src="@{/img/slide2.jpeg}" alt="Premium">
+  </div>
+
+</div>
+
+      <!-- Fallback si no hay productos en carrusel -->
+      <div th:if="${#lists.isEmpty(carrusel)}" class="slide">
+        <div class="slide-bg" style="background: linear-gradient(135deg,#e7e0dc,#efe6dd)"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <div class="slide-tag">Nueva Colección 2025</div>
+          <h1 class="slide-title">El Arte<br>del Estilo<br>Masculino</h1>
+          <p class="slide-desc">Piezas seleccionadas para el hombre contemporáneo que entiende que la elegancia no es una opción, es una filosofía.</p>
+          <a th:href="@{/catalogo}" class="btn-hero">Ver Catálogo</a>
+        </div>
+        <div class="slide-product">
+          <img th:src="@{/img/slide1.jpeg}" alt="JUSKEV">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-btn" onclick="prevSlide()">&#8592;</button>
+      <div class="carousel-dots" id="dots"></div>
+      <button class="carousel-btn" onclick="nextSlide()">&#8594;</button>
+    </div>
+  </div>
+
+ 
+<!-- ═════════ CATEGORÍAS DESTACADAS ═════════ -->
+<div class="section-label">
+    <b>Encuentra todo lo que necesites aqui </b>
+  </div>
+
+  <h2 class="section-title">
+    Categorias
+  </h2>
+
+
+<section class="categorias-featured">
+ 
+  <div class="categoria-box">
+    <img th:src="@{/img/slide1.jpeg}" alt="Camisas">
+    <div class="categoria-overlay"></div>
+    <div class="categoria-content">
+      <div class="categoria-tag">Elegancia</div>
+      <h2>Camisas Premim</h2>
+      <p>
+        Diseños modernos y sofisticados
+        para hombres con estilo.
+      </p>
+      <a th:href="@{/catalogo(categoria=ropa)}">
+        Explorar
+      </a>
+    </div>
+  </div>
+  <div class="categoria-box">
+    <img th:src="@{/img/jean.jpeg}" alt="Pantalones">
+    <div class="categoria-overlay"></div>
+    <div class="categoria-content">
+      <div class="categoria-tag">Tendencia</div>
+      <h2>Pantalones & Bermudas</h2>
+      <p>
+        Comodidad y exclusividad
+        en cada detalle.
+      </p>
+      <a th:href="@{/catalogo(categoria=pantalones)}">
+        Ver colección
+      </a>
+    </div>
+  </div>
+  <div class="categoria-box">
+    <img th:src="@{/img/zapatos boss.png}" alt="Zapatos">
+    <div class="categoria-overlay"></div>
+    <div class="categoria-content">
+      <div class="categoria-tag">Exclusivo</div>
+      <h2>Zapatos </h2>
+      <p>
+        El complemento perfecto
+        para cualquier outfit.
+      </p>
+      <a th:href="@{/catalogo(categoria=calzado)}">
+        Comprar
+      </a>
+    </div>
+  </div>
+    <div class="categoria-box">
+    <img th:src="@{/img/bill.jpeg}" alt="Camisas">
+    <div class="categoria-overlay"></div>
+    <div class="categoria-content">
+      <div class="categoria-tag">Nuevo</div>
+      <h2>Billeteras y Accesorios</h2>
+      <p>
+        Especial para ti
+      </p>
+      <a th:href="@{/catalogo(categoria=ropa)}">
+        Explorar
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═════════ MARCAS ═════════ -->
+
+<section class="brands-section">
+
+  <div class="section-label">
+    <b>Marcas destacadas</b>
+  </div>
+
+  <h2 class="section-title">
+    Trabajamos con lo mejor
+  </h2>
+
+  <div class="brands-grid">
+
+    <div class="brand-item">
+      <img th:src="@{/img/boss.png}" alt="Nike">
+    </div>
+
+    <div class="brand-item">
+      <img th:src="@{/img/lv.png}" alt="Adidas">
+    </div>
+
+    <div class="brand-item">
+      <img th:src="@{/img/puma.png}" alt="Puma">
+    </div>
+
+    <div class="brand-item">
+      <img th:src="@{/img/nike.png}" alt="Zara">
+    </div>
+
+    <div class="brand-item">
+      <img th:src="@{/img/adidas.png}" alt="H&M">
+    </div>
+
+  </div>
+
+</section>
+
+
+  <!-- ═══ SECCIÓN OFERTAS ═══ -->
+  <section class="ofertas-section" th:if="${not #lists.isEmpty(ofertas)}">
+    <div class="section-label"><b>Aprovecha ahora</b></div>
+    <div class="section-title">Ofertas Especiales</div>
+    <div class="ofertas-grid">
+      <a th:href="@{/catalogo}" th:each="p : ${ofertas}"
+         class="oferta-card" th:style="'background-image: url(' + ${p.imagenUrl ?: '/img/slide1.jpeg'} + ')'">
+        <div class="oferta-overlay">
+
+<button class="oferta-btn">
+    Comprar ahora
+</button>
+
+          <div class="oferta-badge" th:text="'-' + ${p.descuento} + '%'">-20%</div>
+          <div class="oferta-nombre" th:text="${p.nombre}"></div>
+          <div class="oferta-precio">
+            <span th:text="${'$' + #numbers.formatInteger(p.precioFinal, 0, 'COMMA')}"></span>
+            <span class="oferta-antes" th:text="${'$' + #numbers.formatInteger(p.precio, 0, 'COMMA')}"></span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- CARRITO -->
+  <div th:replace="~{fragments/carrito :: carrito}"></div>
+
+
+  <!-- FOOTER -->
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <script th:src="@{/js/app.js}"></script>
+  <script th:src="@{/js/catalogo.js}"></script>
+  <script th:src="@{/js/carrusel.js}"></script>
+  <script>
+
+
+    // Inicializar carrusel con número real de slides
+    const totalSlides = document.querySelectorAll('.slide').length;
+    initCarrusel(totalSlides);
+  </script>
+</body>
+</html>

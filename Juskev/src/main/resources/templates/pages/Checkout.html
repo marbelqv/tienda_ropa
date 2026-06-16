@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Compra — JUSKEV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/checkout.css}">
+  <meta name="_csrf"        th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="user-authenticated" sec:authorize="isAuthenticated() and !isAnonymous()" content="true"/>
+  <meta name="user-authenticated" sec:authorize="isAnonymous()" content="false"/>
+</head>
+<body>
+
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  <main class="checkout-main">
+
+    <!-- ── Encabezado ── -->
+    <div class="checkout-header">
+      <h1 class="checkout-title">Finalizar Compra</h1>
+      <p class="checkout-subtitle">Completa tu información para procesar el pedido</p>
+    </div>
+
+    <div class="checkout-grid">
+
+      <!-- ══════════════════════════════
+           COLUMNA IZQUIERDA — Formulario
+      ══════════════════════════════ -->
+      <section class="checkout-form-section">
+
+        <!-- Paso 1: Envío -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="step-badge">1</span>
+            <h2>Información de Envío</h2>
+          </div>
+
+          <div class="form-group">
+            <label for="direccion">Dirección de envío *</label>
+            <input type="text" id="direccion" placeholder="Calle, número, barrio, ciudad" required>
+            <span class="field-hint">Ej: Cra 7 #45-12, Chapinero, Bogotá</span>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono de contacto *</label>
+            <div class="phone-input-wrap">
+              <span class="phone-prefix">🇨🇴 +57</span>
+              <input type="tel" id="telefono" placeholder="300 123 4567" maxlength="10" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="notas">Notas adicionales <span class="optional">(opcional)</span></label>
+            <textarea id="notas" rows="2" placeholder="Instrucciones especiales, apartamento, punto de referencia..."></textarea>
+          </div>
+        </div>
+
+        <!-- Paso 2: Pago -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="step-badge">2</span>
+            <h2>Método de Pago</h2>
+          </div>
+
+          <div class="payment-options">
+            <label class="payment-option" id="opt-efectivo">
+              <input type="radio" name="metodoPago" value="EFECTIVO" checked>
+              <div class="payment-card">
+                <span class="payment-icon">💵</span>
+                <div class="payment-info">
+                  <strong>Efectivo contra entrega</strong>
+                  <p>Paga cuando recibas tu pedido</p>
+                </div>
+                <span class="payment-check">✓</span>
+              </div>
+            </label>
+
+            <label class="payment-option" id="opt-transferencia">
+              <input type="radio" name="metodoPago" value="TRANSFERENCIA">
+              <div class="payment-card">
+                <span class="payment-icon">🏦</span>
+                <div class="payment-info">
+                  <strong>Transferencia bancaria</strong>
+                  <p>Te enviamos los datos al confirmar</p>
+                </div>
+                <span class="payment-check">✓</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Datos bancarios (visible solo al seleccionar transferencia) -->
+          <div class="bank-info" id="bankInfo">
+            <div class="bank-info-header">📋 Datos para transferencia</div>
+            <div class="bank-detail"><span>Banco:</span> <strong>Bancolombia</strong></div>
+            <div class="bank-detail"><span>Tipo:</span> <strong>Ahorros</strong></div>
+            <div class="bank-detail"><span>Cuenta:</span> <strong>123-456789-00</strong></div>
+            <div class="bank-detail"><span>A nombre de:</span> <strong>JUSKEV Store SAS</strong></div>
+            <p class="bank-note">⚠️ Envía el comprobante por WhatsApp una vez realizada la transferencia.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ══════════════════════════════
+           COLUMNA DERECHA — Resumen
+      ══════════════════════════════ -->
+      <aside class="checkout-summary">
+        <div class="summary-card">
+          <h2 class="summary-title">Resumen del Pedido</h2>
+
+          <!-- Items del carrito (renderizados por JS) -->
+          <div class="summary-items" id="summaryItems">
+            <div class="summary-loading">Cargando carrito...</div>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-totals">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="summarySubtotal">$0</span>
+            </div>
+            <div class="summary-row">
+              <span>Envío</span>
+              <span class="envio-gratis">Gratis 🎉</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row total-row">
+              <span>Total</span>
+              <span id="summaryTotal">$0</span>
+            </div>
+          </div>
+
+          <!-- Botón principal -->
+          <button class="btn-confirmar" id="btnConfirmar" onclick="confirmarPedido()">
+            <span id="btnText">Confirmar Pedido</span>
+            <span id="btnSpinner" class="btn-spinner" style="display:none">⏳</span>
+          </button>
+
+          <button class="btn-volver" onclick="window.location.href='/catalogo'">
+            ← Volver al catálogo
+          </button>
+
+          <!-- Badges de confianza -->
+          <div class="trust-badges">
+            <span>🔒 Compra segura</span>
+            <span>📦 Envío a todo Colombia</span>
+          </div>
+        </div>
+      </aside>
+
+    </div><!-- /checkout-grid -->
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <!-- Toast -->
+  <div class="checkout-toast" id="checkoutToast"></div>
+
+  <script th:src="@{/js/checkout.js}"></script>
+</body>
+</html>

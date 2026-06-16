@@ -1,0 +1,25 @@
+
+Este proyecto es una tienda de ropa desarrollada como práctica de desarrollo web. Permite visualizar productos, organizarlos por categorías y simular una experiencia básica de compra.
+
+-Características
+Catálogo de ropa (camisetas, pantalones, zapatos, etc.)
+Visualización de productos con imágenes y precios
+Diseño responsivo (adaptado a móvil y PC)
+Interfaz sencilla e intuitiva
+
+-Tecnologías usadas
+HTML
+Postgresql
+CSS
+JavaScript 
+java (springboot)
+
+
+
+enlace jira:
+
+https://juansebastianperez855.atlassian.net/jira/software/projects/SCRUM/boards/1?jql=&atlOrigin=eyJpIjoiNzg0ZDdlZTBhOGJjNGVkM2IxZDJhZThlYTdkOTkxMzYiLCJwIjoiaiJ9
+
+actualizacion 27/05/2026
+arregle los inicios y cierres de sesion pa admin y cliente
+arregle dashboard (completamente funcional)

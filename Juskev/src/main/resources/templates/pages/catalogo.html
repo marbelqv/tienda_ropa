@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo — JUSKEV</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/catalogo.css}">
+  <style>
+    /* ── Modal galería ── */
+    .modal-thumbs { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .modal-thumb  { width:64px; height:64px; object-fit:cover; border-radius:6px;
+                    border:2px solid transparent; cursor:pointer; transition:border-color .15s; }
+    .modal-thumb.active { border-color:var(--gold,#c9a84c); }
+    /* ── Modal tallas ── */
+    .modal-section { margin:14px 0; }
+    .modal-section-label { font-size:0.72rem; letter-spacing:2px; color:#888;
+                           text-transform:uppercase; margin-bottom:8px; }
+    .modal-tallas { display:flex; flex-wrap:wrap; gap:8px; }
+    .modal-talla-chip { padding:6px 16px; border:1px solid #ccc; border-radius:4px;
+                        font-size:0.85rem; cursor:pointer; background:#fff; transition:all .15s; }
+    .modal-talla-chip.active { background:var(--dark,#1a1a1a); color:var(--gold,#c9a84c);
+                                border-color:var(--dark,#1a1a1a); }
+    .modal-talla-chip:hover  { border-color:#999; }
+    /* ── Modal colores ── */
+    .modal-colores { display:flex; flex-wrap:wrap; gap:10px; }
+    .modal-color-swatch { width:28px; height:28px; border-radius:50%;
+                          border:2px solid transparent; cursor:pointer; transition:border-color .15s; }
+    .modal-color-swatch.active { border-color:var(--gold,#c9a84c); outline:2px solid var(--gold,#c9a84c); outline-offset:2px; }
+  </style>
+
+  <!-- CSRF para fetch requests desde JS -->
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <!-- Indica al JS si el usuario tiene sesión activa -->
+  <meta name="user-authenticated" sec:authorize="isAuthenticated() and !isAnonymous()" content="true"/>
+  <meta name="user-authenticated" sec:authorize="isAnonymous()" content="false"/>
+
+<meta name="user-authenticated" 
+      th:content="${#authorization.expression('isAuthenticated()')}">
+
+
+</head>
+<body>
+
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  <main class="catalogo-main">
+    <div class="catalogo-header">
+      <div class="section-label"><b>Explora</b></div>
+      <div class="section-title">Catálogo Completo</div>
+    </div>
+
+    <!-- ─── FILTROS ─── -->
+    <form th:action="@{/catalogo}" method="get" class="filtros-panel">
+      <div class="filtro-grupo">
+        <label>Buscar</label>
+        <input type="text" name="nombre" class="filtro-input"
+               placeholder="Nombre del producto..."
+               th:value="${filtroNombre}">
+      </div>
+      <div class="filtro-grupo">
+        <label>Categoría</label>
+        <select name="categoria" class="filtro-select">
+          <option value="">Todas</option>
+          <option th:each="cat : ${categorias}"
+                  th:value="${cat.name()}"
+                  th:text="${#strings.capitalize(cat.name())}"
+                  th:selected="${filtroCategoria == cat.name()}">
+          </option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Talla</label>
+        <select name="talla" class="filtro-select">
+          <option value="">Todas</option>
+          <option th:each="t : ${ {'XS','S','M','L','XL','XXL','28','30','32','34','36','38','39','40','41','42','43','44'} }"
+                  th:value="${t}" th:text="${t}"
+                  th:selected="${filtroTalla == t}">
+          </option>
+        </select>
+      </div>
+      <div class="filtro-grupo filtro-precio">
+        <label>Precio</label>
+        <div class="precio-range">
+          <input type="number" name="precioMin" class="filtro-input"
+                 placeholder="Desde" th:value="${filtroPrecioMin}" min="0">
+          <span>—</span>
+          <input type="number" name="precioMax" class="filtro-input"
+                 placeholder="Hasta" th:value="${filtroPrecioMax}" min="0">
+        </div>
+      </div>
+      <div class="filtro-acciones">
+        <button type="submit" class="btn-filtrar">Filtrar</button>
+        <a th:href="@{/catalogo}" class="btn-limpiar">Limpiar</a>
+      </div>
+    </form>
+
+
+    <!-- ─── RESULTADO ─── -->
+    <div class="catalogo-resultado">
+      <span class="resultado-count"
+            th:text="${#lists.size(productos)} + ' productos encontrados'"></span>
+    </div>
+
+    <!-- ─── GRID DE PRODUCTOS ─── -->
+    <div class="products-grid" id="productsGrid">
+
+      <!-- Sin productos -->
+      <div th:if="${#lists.isEmpty(productos)}" class="sin-productos">
+        <p>No se encontraron productos con esos filtros.</p>
+        <a th:href="@{/catalogo}">Ver todos los productos</a>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div th:each="p : ${productos}" class="product-card" th:attr="data-id=${p.id}">
+  
+  <div class="product-img">
+    <img th:src="${p.imagenUrl ?: '/img/slide1.jpeg'}"
+         th:alt="${p.nombre}"
+         onerror="this.src='/img/slide1.jpeg'">
+    <div th:if="${p.badge != null}" class="product-badge"
+         th:classappend="${p.enOferta ? 'badge-sale' : ''}"
+         th:text="${p.badge}"></div>
+    <div th:if="${p.descuento > 0}" class="product-descuento-badge"
+         th:text="'-' + ${p.descuento} + '%'"></div>
+  </div>
+
+  <div class="product-body">
+
+    <div class="product-top">
+      <div class="product-brand" th:text="${p.marca}"></div>
+      <div class="product-name" th:text="${p.nombre}"></div>
+      <div class="rating-selector">
+        <span class="star" data-rating="1">★</span>
+        <span class="star" data-rating="2">★</span>
+        <span class="star" data-rating="3">★</span>
+        <span class="star" data-rating="4">★</span>
+        <span class="star" data-rating="5">★</span>
+      </div>
+      <input type="hidden" class="ratingValue" value="0">
+    </div>
+
+    <div class="product-bottom">
+      <div class="product-price">
+        <span class="price-current"
+              th:text="${'$' + #numbers.formatInteger(p.precioFinal, 0, 'COMMA')}"></span>
+        <span th:if="${p.descuento > 0}" class="price-old"
+              th:text="${'$' + #numbers.formatInteger(p.precio, 0, 'COMMA')}"></span>
+      </div>
+      <div class="product-stock-info">
+        <span th:if="${p.stock <= 5 && p.stock > 0}" class="stock-bajo">
+          ⚠️ Solo [[${p.stock}]] disponibles
+        </span>
+      </div>
+
+
+      
+
+
+      <div class="product-actions">
+
+        <div class="product-actions">
+  <button class="btn-add-cart"
+          th:attr="onclick='addToCartFromPage(' + ${p.id} + ', \'' + ${p.nombre} + '\', ' + ${p.precioFinal} + ', \'' + ${p.imagenUrl ?: ''} + '\')'">
+    + Carrito
+  </button>
+  <button class="btn-view"
+          th:attr="onclick='openProductModal(' + ${p.id} + ')'">
+    Ver
+  </button>
+  <button class="btn-fav"
+          th:attr="onclick='toggleFav(' + ${p.id} + ', this)'">
+    ♡
+  </button>
+</div>
+
+        <button class="btn-add-cart"
+                th:attr="onclick='addToCartFromPage(' + ${p.id} + ', \'' + ${p.nombre} + '\', ' + ${p.precioFinal} + ', \'' + ${p.imagenUrl ?: ''} + '\')'">
+          + Carrito
+        </button>
+        <button class="btn-view"
+                th:attr="onclick='openProductModal(' + ${p.id} + ')'">
+          Ver
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+      
+     
+  </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- MODAL DETALLE PRODUCTO -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-img-col" id="modalImg"></div>
+    <div class="modal-info-col" id="modalInfo"></div>
+    <div class="modal-resenas" id="modalResenas"></div>
+  </div>
+</div>
+
+<div th:replace="~{fragments/carrito :: carrito}"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+
+
+
+
+
+
+  <script th:src="@{/js/app.js}"></script>
+  <script th:src="@{/js/catalogo.js}"></script>
+</body>
+</html>

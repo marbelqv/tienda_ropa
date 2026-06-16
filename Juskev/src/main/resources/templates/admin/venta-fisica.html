@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venta Física — JUSKEV Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <meta name="_csrf"        th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <style>
+    /* ─── Selectores de talla y color en venta física ─── */
+    .vf-variantes { display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap; margin-top:1rem; }
+    .vf-variante-grupo { display:flex; flex-direction:column; gap:6px; }
+    .vf-variante-grupo label { font-size:0.72rem; letter-spacing:1.5px; text-transform:uppercase; color:#8a8a8a; }
+    .vf-tallas { display:flex; flex-wrap:wrap; gap:6px; }
+    .vf-talla-chip {
+      padding:6px 14px; border:1.5px solid #d0d0d0; background:#fff;
+      font-size:0.82rem; font-weight:500; color:#1a1a1a; cursor:pointer;
+      border-radius:4px; transition:all .15s;
+    }
+    .vf-talla-chip:hover  { border-color:#1a1a1a; }
+    .vf-talla-chip.active { border-color:#1a1a1a; background:#1a1a1a; color:#fff; }
+    .vf-colores { display:flex; flex-wrap:wrap; gap:8px; }
+    .vf-color-swatch {
+      width:28px; height:28px; border-radius:50%; cursor:pointer;
+      border:2px solid transparent; outline:2px solid transparent;
+      transition:outline .15s, transform .15s;
+    }
+    .vf-color-swatch:hover  { transform:scale(1.15); }
+    .vf-color-swatch.active { outline:2.5px solid #1a1a1a; outline-offset:3px; }
+    .vf-sin-variantes { font-size:0.82rem; color:#aaa; font-style:italic; }
+    /* Tabla: columnas talla/color */
+    .col-variante { font-size:0.8rem; color:#666; }
+    .color-pill {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:0.75rem; padding:2px 8px; border-radius:99px;
+      border:1px solid #e0ddd8;
+    }
+    .color-dot-sm {
+      width:10px; height:10px; border-radius:50%; border:1px solid rgba(0,0,0,.15);
+      display:inline-block; flex-shrink:0;
+    }
+    /* Variantes en mis-pedidos */
+    .pedido-item-variantes { display:flex; gap:6px; flex-wrap:wrap; margin:3px 0; }
+    .variante-tag {
+      font-size:0.75rem; padding:2px 8px; border-radius:99px;
+      border:1px solid #e0ddd8; color:#555; display:inline-flex;
+      align-items:center; gap:5px;
+    }
+    .color-dot { width:10px; height:10px; border-radius:50%; border:1px solid rgba(0,0,0,.15); display:inline-block; }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-page-title">Registrar Venta Física</h1>
+    </div>
+
+    <div class="admin-card form-card">
+
+      <!-- Datos de la venta -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nombre del Cliente *</label>
+          <input type="text" id="nombreCliente" class="form-input" placeholder="Ej: Carlos Gómez">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombre del Vendedor *</label>
+          <input type="text" id="nombreVendedor" class="form-input" placeholder="Tu nombre">
+        </div>
+      </div>
+
+      <!-- Selector de producto -->
+      <div class="form-group" style="margin-top:1.5rem">
+        <label class="form-label">Seleccionar Producto</label>
+        <select id="selectProducto" class="form-input" onchange="onProductoChange(this)">
+          <option value="">Selecciona un producto...</option>
+          <option th:each="p : ${productos}"
+                  th:value="${p.id}"
+                  th:data-nombre="${p.nombre}"
+                  th:data-precio="${p.precioFinal}"
+                  th:data-tallas="${p.tallas}"
+                  th:data-colores="${p.colores}"
+                  th:text="${p.nombre} + ' — $' + ${#numbers.formatInteger(p.precioFinal, 0, 'COMMA')} + ' (' + ${p.stock} + ' en stock)'">
+          </option>
+        </select>
+      </div>
+
+      <!-- Tallas y colores dinámicos (aparecen según el producto) -->
+      <div id="variantesPanel" style="display:none; margin-top:1rem;">
+        <div class="vf-variantes">
+
+          <!-- Tallas -->
+          <div class="vf-variante-grupo" id="grupoTallas" style="display:none">
+            <label>Talla</label>
+            <div class="vf-tallas" id="tallasContainer"></div>
+          </div>
+
+          <!-- Colores -->
+          <div class="vf-variante-grupo" id="grupoColores" style="display:none">
+            <label>Color</label>
+            <div class="vf-colores" id="coloresContainer"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Cantidad y botón agregar -->
+      <div class="select-add-row" style="margin-top:1rem">
+        <div class="form-group" style="flex:1">
+          <label class="form-label">Cantidad</label>
+          <input type="number" id="cantidadItem" class="form-input" value="1" min="1">
+        </div>
+        <button onclick="agregarItem()" class="btn-agregar-item">+ Agregar</button>
+      </div>
+
+      <!-- Lista de ítems de la venta -->
+      <div id="itemsLista" class="items-lista" style="display:none; margin-top:2rem">
+        <h3 class="items-titulo">Productos en esta venta</h3>
+        <table class="admin-table" id="itemsTable">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Talla</th>
+              <th>Color</th>
+              <th>Precio unit.</th>
+              <th>Cantidad</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="itemsTbody"></tbody>
+        </table>
+        <div class="venta-total-row">
+          <strong>TOTAL: </strong>
+          <span id="ventaTotal" class="venta-total-valor">$0</span>
+        </div>
+      </div>
+
+      <!-- Botón registrar -->
+      <div class="form-actions" style="margin-top:2rem">
+        <button onclick="registrarVenta()" class="btn-submit-admin">🧾 Registrar y Generar Factura PDF</button>
+      </div>
+
+      <div id="resultadoVenta" class="resultado-venta" style="display:none"></div>
+
+    </div>
+  </main>
+
+  <script>
+    const items = [];
+    let tallaSeleccionada = null;
+    let colorSeleccionado = null;
+
+    /* ── Al cambiar el producto, cargar sus tallas y colores ── */
+    function onProductoChange(sel) {
+      tallaSeleccionada = null;
+      colorSeleccionado = null;
+
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt.value) {
+        document.getElementById('variantesPanel').style.display = 'none';
+        return;
+      }
+
+      const tallasStr  = opt.dataset.tallas  || '';   // "S,M,L,XL"
+      const coloresStr = opt.dataset.colores || '';   // "#111,#c9a84c"
+
+      const tallas  = tallasStr.trim()  ? tallasStr.split(',').map(t => t.trim()).filter(Boolean)  : [];
+      const colores = coloresStr.trim() ? coloresStr.split(',').map(c => c.trim()).filter(Boolean) : [];
+
+      // Panel tallas
+      const grupoTallas = document.getElementById('grupoTallas');
+      const tallasContainer = document.getElementById('tallasContainer');
+      if (tallas.length > 0) {
+        tallasContainer.innerHTML = tallas.map(t =>
+          '<span class="vf-talla-chip" data-talla="' + t + '" onclick="selTalla(this)">' + t + '</span>'
+        ).join('');
+        grupoTallas.style.display = 'flex';
+      } else {
+        grupoTallas.style.display = 'none';
+      }
+
+      // Panel colores
+      const grupoColores = document.getElementById('grupoColores');
+      const coloresContainer = document.getElementById('coloresContainer');
+      if (colores.length > 0) {
+        coloresContainer.innerHTML = colores.map(hex =>
+          '<span class="vf-color-swatch" data-color="' + hex + '" '
+          + 'style="background:' + hex + '" onclick="selColor(this)" title="' + hex + '"></span>'
+        ).join('');
+        grupoColores.style.display = 'flex';
+      } else {
+        grupoColores.style.display = 'none';
+      }
+
+      document.getElementById('variantesPanel').style.display =
+        (tallas.length > 0 || colores.length > 0) ? 'block' : 'none';
+    }
+
+    function selTalla(el) {
+      document.querySelectorAll('.vf-talla-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      tallaSeleccionada = el.dataset.talla;
+    }
+
+    function selColor(el) {
+      document.querySelectorAll('.vf-color-swatch').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      colorSeleccionado = el.dataset.color;
+    }
+
+    /* ── Agregar ítem a la lista ── */
+    function agregarItem() {
+      const sel = document.getElementById('selectProducto');
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt.value) return alert('Selecciona un producto');
+
+      const tallasStr  = opt.dataset.tallas  || '';
+      const coloresStr = opt.dataset.colores || '';
+      const tieneTallas  = tallasStr.trim()  !== '';
+      const tieneColores = coloresStr.trim() !== '';
+
+      if (tieneTallas  && !tallaSeleccionada)  return alert('Selecciona una talla');
+      if (tieneColores && !colorSeleccionado)  return alert('Selecciona un color');
+
+      const id       = opt.value;
+      const nombre   = opt.dataset.nombre;
+      const precio   = parseFloat(opt.dataset.precio);
+      const cantidad = parseInt(document.getElementById('cantidadItem').value) || 1;
+      const talla    = tallaSeleccionada  || null;
+      const color    = colorSeleccionado  || null;
+
+      // Mismo producto + misma talla + mismo color → sumar cantidad
+      const existente = items.find(i =>
+        i.productoId === id && i.talla === talla && i.color === color
+      );
+      if (existente) {
+        existente.cantidad += cantidad;
+      } else {
+        items.push({ productoId: id, nombre, precio, cantidad, talla, color });
+      }
+
+      renderItems();
+
+      // Limpiar selección para el próximo ítem
+      tallaSeleccionada = null;
+      colorSeleccionado = null;
+      document.querySelectorAll('.vf-talla-chip, .vf-color-swatch')
+        .forEach(el => el.classList.remove('active'));
+      document.getElementById('cantidadItem').value = 1;
+    }
+
+    function quitarItem(idx) {
+      items.splice(idx, 1);
+      renderItems();
+    }
+
+    /* ── Renderizar tabla de ítems ── */
+    function renderItems() {
+      const tbody = document.getElementById('itemsTbody');
+      const lista = document.getElementById('itemsLista');
+      lista.style.display = items.length ? 'block' : 'none';
+
+      let total = 0;
+      tbody.innerHTML = items.map((item, i) => {
+        const sub = item.precio * item.cantidad;
+        total += sub;
+
+        const tallaHtml = item.talla
+          ? '<span style="font-size:0.8rem;padding:2px 8px;border:1px solid #e0ddd8;border-radius:4px;">' + item.talla + '</span>'
+          : '<span style="color:#aaa;font-size:0.8rem;">—</span>';
+
+        const colorHtml = item.color
+          ? '<span class="color-pill"><span class="color-dot-sm" style="background:' + item.color + '"></span>' + item.color + '</span>'
+          : '<span style="color:#aaa;font-size:0.8rem;">—</span>';
+
+        return '<tr>'
+          + '<td>' + item.nombre + '</td>'
+          + '<td>' + tallaHtml + '</td>'
+          + '<td>' + colorHtml + '</td>'
+          + '<td>$' + item.precio.toLocaleString('es-CO') + '</td>'
+          + '<td><input type="number" value="' + item.cantidad + '" min="1"'
+          + ' onchange="items[' + i + '].cantidad=+this.value; renderItems()"'
+          + ' style="width:70px" class="stock-input"></td>'
+          + '<td>$' + sub.toLocaleString('es-CO') + '</td>'
+          + '<td><button onclick="quitarItem(' + i + ')" class="btn-accion btn-eliminar">✕</button></td>'
+          + '</tr>';
+      }).join('');
+
+      document.getElementById('ventaTotal').textContent = '$' + total.toLocaleString('es-CO');
+    }
+
+    /* ── Registrar venta ── */
+    function registrarVenta() {
+      const nombreCliente  = document.getElementById('nombreCliente').value.trim();
+      const nombreVendedor = document.getElementById('nombreVendedor').value.trim();
+
+      if (!nombreCliente)  return alert('Ingresa el nombre del cliente');
+      if (!nombreVendedor) return alert('Ingresa el nombre del vendedor');
+      if (items.length === 0) return alert('Agrega al menos un producto');
+
+      const csrfToken  = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+      const body = { nombreCliente, nombreVendedor, items };
+
+      fetch('/admin/venta-fisica', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', [csrfHeader]: csrfToken },
+        body: JSON.stringify(body)
+      })
+      .then(r => r.json())
+      .then(data => {
+        const div = document.getElementById('resultadoVenta');
+        div.style.display = 'block';
+        if (data.ok) {
+          div.className = 'resultado-venta exito-venta';
+          div.innerHTML = '✅ Venta registrada exitosamente. '
+            + '<a href="/admin/factura/' + data.pedidoId + '" class="btn-pdf-link" target="_blank">'
+            + '📄 Descargar Factura PDF</a>';
+          items.length = 0;
+          renderItems();
+          document.getElementById('nombreCliente').value  = '';
+          document.getElementById('nombreVendedor').value = '';
+          document.getElementById('selectProducto').value = '';
+          document.getElementById('variantesPanel').style.display = 'none';
+        } else {
+          div.className = 'resultado-venta error-venta';
+          div.textContent = '❌ Error: ' + data.error;
+        }
+      })
+      .catch(() => alert('Error de conexión. Intenta de nuevo.'));
+    }
+  </script>
+</body>
+</html>

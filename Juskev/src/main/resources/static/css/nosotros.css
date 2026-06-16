@@ -1,0 +1,240 @@
+/* ═══════════════════════════════
+   NOSOTROS PAGE
+═══════════════════════════════ */
+
+.nosotros-main{
+    width:100%;
+    min-height:100vh;
+    background:#f8f5f2;
+    padding:120px 8% 80px;
+}
+
+/* HERO */
+
+.nosotros-hero{
+    text-align:center;
+    max-width:900px;
+    margin:0 auto 80px;
+}
+
+.section-label{
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#9b7b65;
+    margin-bottom:20px;
+}
+
+.section-title{
+    font-family:'Playfair Display', serif;
+    font-size:64px;
+    line-height:1.1;
+    color:#1e1e1e;
+    margin-bottom:25px;
+    font-weight:700;
+}
+
+.nosotros-intro{
+    font-size:18px;
+    line-height:1.9;
+    color:#555;
+    max-width:760px;
+    margin:auto;
+}
+
+/* MISIÓN Y VISIÓN */
+
+.mision-vision-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:40px;
+    margin-bottom:100px;
+}
+
+.mv-card{
+    background:rgb(143, 135, 135);
+    padding:50px 40px;
+    border-radius:30px;
+    box-shadow:0 10px 40px rgba(0,0,0,.06);
+    transition:.4s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.mv-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 50px rgba(0,0,0,.1);
+}
+
+.mv-icon{
+    font-size:50px;
+    margin-bottom:25px;
+}
+
+.mv-titulo{
+    font-family:'Playfair Display', serif;
+    font-size:32px;
+    color:#1e1e1e;
+    margin-bottom:20px;
+}
+
+.mv-contenido p{
+    color:#666;
+    line-height:1.9;
+    font-size:16px;
+}
+
+/* VALORES */
+
+.valores-section{
+    text-align:center;
+}
+
+.valores-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:30px;
+    margin-top:60px;
+}
+
+.valor-item{
+    background:white;
+    border-radius:25px;
+    padding:40px 25px;
+    transition:.3s ease;
+    box-shadow:0 8px 30px rgba(0,0,0,.05);
+}
+
+.valor-item:hover{
+    transform:translateY(-8px);
+}
+
+.valor-icon{
+    font-size:45px;
+    margin-bottom:20px;
+}
+
+.valor-nombre{
+    font-family:'Playfair Display', serif;
+    font-size:24px;
+    margin-bottom:15px;
+    color:#1e1e1e;
+}
+
+.valor-item p{
+    color:#666;
+    line-height:1.7;
+    font-size:15px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    .nosotros-main{
+        padding:100px 20px 60px;
+    }
+
+    .section-title{
+        font-size:42px;
+    }
+
+    .nosotros-intro{
+        font-size:16px;
+    }
+
+    .mv-card{
+        padding:35px 25px;
+    }
+
+}
+
+/* =========================
+   NOSOTROS
+========================= */
+
+.nosotros-main{
+    padding:120px 8%;
+    background:#f8f5f2;
+    min-height:100vh;
+}
+
+.nosotros-hero{
+    text-align:center;
+    margin-bottom:80px;
+}
+
+.section-title{
+    font-size:60px;
+    font-family:'Playfair Display', serif;
+    color:#111;
+    margin-bottom:20px;
+}
+
+.nosotros-intro{
+    max-width:800px;
+    margin:auto;
+    font-size:18px;
+    line-height:1.8;
+    color:#555;
+}
+
+.mision-vision-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:40px;
+    margin-top:60px;
+}
+
+.mv-card{
+    background:#fff;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.mv-icon{
+    font-size:50px;
+    margin-bottom:20px;
+}
+
+.mv-titulo{
+    font-size:32px;
+    margin-bottom:20px;
+    font-family:'Playfair Display', serif;
+}
+
+.mv-contenido p{
+    color:#666;
+    line-height:1.8;
+}
+
+.valores-section{
+    margin-top:100px;
+    text-align:center;
+}
+
+.valores-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:30px;
+    margin-top:50px;
+}
+
+.valor-item{
+    background:white;
+    padding:35px 25px;
+    border-radius:25px;
+    box-shadow:0 5px 25px rgba(0,0,0,.06);
+}
+
+.valor-icon{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.valor-nombre{
+    font-size:24px;
+    margin-bottom:10px;
+    font-family:'Playfair Display', serif;
+}

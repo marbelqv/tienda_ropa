@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosotros — JUSKEV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+   <link rel="stylesheet" th:href="@{/css/nosotros.css}">
+
+  <!-- CSRF para fetch/logout desde JS -->
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <!-- Indica al JS si el usuario tiene sesión activa -->
+  <meta name="user-authenticated" sec:authorize="isAuthenticated() and !isAnonymous()" content="true"/>
+  <meta name="user-authenticated" sec:authorize="isAnonymous()" content="false"/>
+</head>
+<body>
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  <main class="nosotros-main">
+    <div class="nosotros-hero">
+      <div class="section-label"><b>Quiénes somos</b></div>
+      <h1 class="section-title">Nuestra Historia</h1>
+      <p class="nosotros-intro">JUSKEV nació de la pasión por la moda masculina de alta calidad en Colombia. Creemos que cada hombre merece vestir con elegancia, comodidad y estilo.</p>
+    </div>
+
+    <div class="mision-vision-grid">
+
+      <!-- MISIÓN -->
+      <div class="mv-card">
+        <div class="mv-icon">🎯</div>
+        <h2 class="mv-titulo">Nuestra Misión</h2>
+        <div class="mv-contenido">
+          <!--
+            ════════════════════════════════════════
+            PERSONALIZA AQUÍ TU MISIÓN
+            Reemplaza este texto con la misión real
+            de tu tienda JUSKEV
+            ════════════════════════════════════════
+          -->
+          <p>Ofrecer a cada cliente prendas de moda masculina de la más alta calidad, seleccionadas con criterio y elegancia, brindando una experiencia de compra excepcional que refleje el verdadero estilo del hombre colombiano contemporáneo.</p>
+        </div>
+      </div>
+
+      <!-- VISIÓN -->
+      <div class="mv-card">
+        <div class="mv-icon">🔭</div>
+        <h2 class="mv-titulo">Nuestra Visión</h2>
+        <div class="mv-contenido">
+          <!--
+            ════════════════════════════════════════
+            PERSONALIZA AQUÍ TU VISIÓN
+            Reemplaza este texto con la visión real
+            de tu tienda JUSKEV
+            ════════════════════════════════════════
+          -->
+          <p>Convertirnos en la marca de referencia de moda masculina premium en Colombia, expandiendo nuestra presencia a toda América Latina y siendo reconocidos por la calidad, elegancia y compromiso con nuestros clientes.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VALORES -->
+    <div class="valores-section">
+      <div class="section-label"><b>Lo que nos define</b></div>
+      <h2 class="section-title">Nuestros Valores</h2>
+      <div class="valores-grid">
+        <div class="valor-item">
+          <div class="valor-icon">💎</div>
+          <div class="valor-nombre">Calidad</div>
+          <p>Solo trabajamos con materiales y proveedores que cumplen los más altos estándares.</p>
+        </div>
+        <div class="valor-item">
+          <div class="valor-icon">🤝</div>
+          <div class="valor-nombre">Confianza</div>
+          <p>Cada producto que ofrecemos ha sido probado y verificado por nuestro equipo.</p>
+        </div>
+        <div class="valor-item">
+          <div class="valor-icon">🇨🇴</div>
+          <div class="valor-nombre">Colombia</div>
+          <p>Orgullosamente colombianos, apoyando el talento y la industria local.</p>
+        </div>
+        <div class="valor-item">
+          <div class="valor-icon">✨</div>
+          <div class="valor-nombre">Elegancia</div>
+          <p>Porque el estilo no es un lujo, es una actitud que todos merecen.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/carrito :: carrito}"></div>
+  <div th:replace="~{fragments/footer :: footer}"></div>
+  <script th:src="@{/js/app.js}"></script>
+  <script th:src="@{/js/catalogo.js}"></script>
+</body>
+</html>

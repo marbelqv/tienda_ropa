@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="navbar" class="navbar">
+
+  <!-- Logo -->
+  <a th:href="@{/}" class="nav-logo">
+    <img th:src="@{/img/logo.png}" alt="JUSKEV">
+  </a>
+
+  <!-- Links de navegación -->
+  <ul class="nav-links">
+    <li><a th:href="@{/}"         th:classappend="${paginaActual == 'inicio'}   ? 'active'">Inicio</a></li>
+    <li><a th:href="@{/nosotros}" th:classappend="${paginaActual == 'nosotros'} ? 'active'">Nosotros</a></li>
+    <li><a th:href="@{/catalogo}" th:classappend="${paginaActual == 'catalogo'} ? 'active'">Catálogo</a></li>
+    <li><a th:href="@{/contacto}" th:classappend="${paginaActual == 'contacto'} ? 'active'">Contacto</a></li>
+  </ul>
+
+  <!-- Acciones -->
+  <div class="nav-actions">
+
+    <!-- Anónimo -->
+    <div sec:authorize="isAnonymous()">
+      <a th:href="@{/auth/login}" class="btn-login">Iniciar Sesión</a>
+    </div>
+
+    <!-- ── ADMIN ── -->
+    <div sec:authorize="hasRole('ADMIN')" class="user-menu-wrapper">
+      <button class="user-icon-btn" onclick="toggleUserMenu(this)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span class="user-name-nav" sec:authentication="name"></span>
+        <span class="user-badge-admin">ADMIN</span>
+      </button>
+      <!-- dropdown DENTRO del wrapper, DESPUÉS del botón -->
+      <div class="user-dropdown">
+        <a th:href="@{/admin/dashboard}" class="dropdown-item">
+          <span>⚙️</span> Dashboard
+        </a>
+        <form th:action="@{/auth/logout}" method="post" style="margin:0">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <button type="submit" class="dropdown-item dropdown-logout"
+                  style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:10px 16px;font-family:inherit;font-size:0.9rem;color:inherit;">
+            <span>🚪</span> Cerrar Sesión
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── CLIENTE ── -->
+    <div sec:authorize="hasRole('CLIENTE')" class="user-menu-wrapper">
+      <button class="user-icon-btn" onclick="toggleUserMenu(this)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span class="user-name-nav" sec:authentication="name"></span>
+      </button>
+      <!-- dropdown DENTRO del wrapper, DESPUÉS del botón -->
+      <div class="user-dropdown">
+        <a th:href="@{/cliente/mis-pedidos}" class="dropdown-item">
+          <span>📦</span> Mis Pedidos
+        </a>
+        <form th:action="@{/auth/logout}" method="post" style="margin:0">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <button type="submit" class="dropdown-item dropdown-logout"
+                  style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:10px 16px;font-family:inherit;font-size:0.9rem;color:inherit;">
+            <span>🚪</span> Cerrar Sesión
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Carrito -->
+    <button class="cart-btn" onclick="openCart()">
+      🛒
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+  </div>
+</nav>
+
+</body>
+</html>

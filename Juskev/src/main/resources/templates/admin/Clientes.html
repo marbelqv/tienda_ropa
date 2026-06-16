@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientes — JUSKEV Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-page-title">Clientes</h1>
+    </div>
+
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(clientes)}">
+            <td colspan="4" style="text-align:center; padding:2rem; color:#8a8a8a">
+              No hay clientes registrados aún.
+            </td>
+          </tr>
+          <tr th:each="c : ${clientes}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.nombre}"></td>
+            <td th:text="${c.email}"></td>
+            <td>
+              <span th:if="${c.activo}" class="estado-badge estado-completado">Activo</span>
+              <span th:if="${!c.activo}" class="estado-badge estado-cancelado">Inactivo</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>

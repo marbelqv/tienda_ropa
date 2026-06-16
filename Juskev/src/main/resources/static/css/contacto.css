@@ -1,0 +1,297 @@
+/* ═══════════════════════════════
+   CONTACTO
+═══════════════════════════════ */
+
+.contacto-main{
+    min-height:100vh;
+    padding:120px 8% 80px;
+    background:
+      linear-gradient(
+        to bottom,
+        #f8f5f2,
+        #efe7df
+      );
+}
+
+/* HEADER */
+
+.contacto-header{
+    text-align:center;
+    max-width:800px;
+    margin:0 auto 70px;
+}
+
+.section-label{
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#9b7b65;
+    margin-bottom:18px;
+}
+
+.section-title{
+    font-family:'Playfair Display', serif;
+    font-size:64px;
+    color:#111;
+    margin-bottom:20px;
+    line-height:1.1;
+}
+
+.contacto-intro{
+    font-size:18px;
+    line-height:1.8;
+    color:#666;
+}
+
+/* GRID */
+
+.redes-grid{
+    display:grid;
+    grid-template-columns:
+      repeat(auto-fit,minmax(320px,1fr));
+    gap:35px;
+}
+
+/* CARD */
+
+.red-card{
+    position:relative;
+    overflow:hidden;
+    padding:45px 35px;
+    border-radius:35px;
+    text-decoration:none;
+    color:white;
+    transition:.4s ease;
+    min-height:340px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.red-card:hover{
+    transform:translateY(-12px);
+    box-shadow:0 25px 60px rgba(0,0,0,.15);
+}
+
+/* EFECTO BRILLO */
+
+.red-card::before{
+    content:'';
+    position:absolute;
+    top:-100%;
+    left:-100%;
+    width:250%;
+    height:250%;
+    background:
+      linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.08),
+        transparent
+      );
+    transform:rotate(20deg);
+    transition:.8s;
+}
+
+.red-card:hover::before{
+    top:-40%;
+    left:-40%;
+}
+
+/* COLORES */
+
+.red-whatsapp{
+    background:
+      linear-gradient(
+        135deg,
+        #11998e,
+        #38ef7d
+      );
+}
+
+.red-tiktok{
+    background:
+      linear-gradient(
+        135deg,
+        #111,
+        #2c2c2c
+      );
+}
+
+.red-instagram{
+    background:
+      linear-gradient(
+        135deg,
+        #833ab4,
+        #fd1d1d,
+        #fcb045
+      );
+}
+
+/* ICONO */
+
+.red-icono{
+    margin-bottom:35px;
+    opacity:.95;
+}
+
+/* NOMBRE */
+
+.red-nombre{
+    font-family:'Playfair Display', serif;
+    font-size:38px;
+    margin-bottom:10px;
+    font-weight:700;
+}
+
+/* HANDLE */
+
+.red-handle{
+    font-size:16px;
+    opacity:.9;
+    margin-bottom:20px;
+    letter-spacing:1px;
+}
+
+/* DESCRIPCIÓN */
+
+.red-desc{
+    font-size:15px;
+    line-height:1.7;
+    opacity:.92;
+    margin-bottom:30px;
+    max-width:280px;
+}
+
+/* CTA */
+
+.red-cta{
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:1px;
+    transition:.3s;
+}
+
+.red-card:hover .red-cta{
+    transform:translateX(6px);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    .contacto-main{
+        padding:100px 20px 60px;
+    }
+
+    .section-title{
+        font-size:42px;
+    }
+
+    .contacto-intro{
+        font-size:16px;
+    }
+
+    .red-card{
+        min-height:300px;
+        padding:35px 28px;
+    }
+
+    .red-nombre{
+        font-size:32px;
+    }
+
+}
+
+
+/* ═══════════════════════════════
+   UBICACIÓN
+═══════════════════════════════ */
+
+.ubicacion-section{
+    margin-top:100px;
+    display:grid;
+    grid-template-columns:1fr 1.2fr;
+    gap:50px;
+    align-items:center;
+}
+
+/* INFO */
+
+.ubicacion-info{
+    background:white;
+    padding:50px;
+    border-radius:35px;
+    box-shadow:0 15px 40px rgba(0,0,0,.06);
+}
+
+.ubicacion-desc{
+    color:#666;
+    line-height:1.8;
+    margin-bottom:35px;
+}
+
+/* ITEMS */
+
+.ubicacion-detalles{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.ubicacion-item{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+}
+
+.ubicacion-item span{
+    font-size:28px;
+}
+
+.ubicacion-item strong{
+    display:block;
+    font-size:17px;
+    margin-bottom:5px;
+    color:#111;
+}
+
+.ubicacion-item p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* MAPA */
+
+.ubicacion-mapa{
+    height:100%;
+    min-height:500px;
+    border-radius:35px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.ubicacion-mapa iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .ubicacion-section{
+        grid-template-columns:1fr;
+    }
+
+    .ubicacion-info{
+        padding:35px 25px;
+    }
+
+    .ubicacion-mapa{
+        min-height:350px;
+    }
+
+}
