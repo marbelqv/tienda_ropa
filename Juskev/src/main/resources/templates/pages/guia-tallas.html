@@ -7,6 +7,9 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
    <link rel="stylesheet" th:href="@{/css/guia-tallas.css}">
@@ -17,200 +20,253 @@
 
 <main class="guia-main">
 
-  <section class="guia-hero">
-
-    <div class="section-label">
-      <b>JUSKEV</b>
-    </div>
-
-    <h1 class="section-title">
-      Guía de Tallas
-    </h1>
  
-    </p>
-
-  </section>
 
 
 
+
+
+
+
+
+
+
+
+  <div class="g-wrap">
+  <div class="g-hero">
+    <div class="g-eyebrow">JUSKEV</div>
+    <h1>Guía de Tallas</h1>
+    <div class="g-hero-line"></div>
+    <p class="g-hero-sub">Encuentra tu medida exacta antes de comprar. Todas las tallas en centímetros.</p>
+  </div>
+
+  <div class="g-tabs">
+    <button class="g-tab active" data-target="all">Todo</button>
+    <button class="g-tab" data-target="camisas">Camisas & Polos</button>
+    <button class="g-tab" data-target="pantalones">Pantalones</button>
+    <button class="g-tab" data-target="calzado">Calzado</button>
+  </div>
+
+  <!-- ALL -->
+  <div class="g-section visible" id="sec-all">
+    <div class="g-all-grid">
+      <div class="g-card">
+        <div class="g-card-header">
+          <div class="g-card-icon"><i class="ti ti-shirt" aria-hidden="true"></i></div>
+          <div><div class="g-card-title">Superiores</div><div class="g-card-sub">Camisas & Polos</div></div>
+        </div>
+        <div class="g-table-wrap">
+          <table>
+            <thead><tr><th>Talla</th><th>Pecho</th><th>Cintura</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge-talla">S</span></td><td>88 – 94 cm</td><td>74 – 80 cm</td></tr>
+              <tr><td><span class="badge-talla">M</span></td><td>95 – 102 cm</td><td>81 – 88 cm</td></tr>
+              <tr><td><span class="badge-talla">L</span></td><td>103 – 110 cm</td><td>89 – 96 cm</td></tr>
+              <tr><td><span class="badge-talla">XL</span></td><td>111 – 118 cm</td><td>97 – 104 cm</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="g-card">
+        <div class="g-card-header">
+          <div class="g-card-icon"><i class="ti ti-school" aria-hidden="true"></i></div>
+          <div><div class="g-card-title">Inferiores</div><div class="g-card-sub">Pantalones</div></div>
+        </div>
+        <div class="g-table-wrap">
+          <table>
+            <thead><tr><th>Talla</th><th>Cintura</th><th>Largo</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge-talla">30</span></td><td>76 cm</td><td>92 cm</td></tr>
+              <tr><td><span class="badge-talla">32</span></td><td>81 cm</td><td>97 cm</td></tr>
+              <tr><td><span class="badge-talla">34</span></td><td>86 cm</td><td>102 cm</td></tr>
+              <tr><td><span class="badge-talla">36</span></td><td>91 cm</td><td>107 cm</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="g-card">
+      <div class="g-card-header">
+        <div class="g-card-icon"><i class="ti ti-shoe" aria-hidden="true"></i></div>
+        <div><div class="g-card-title">Calzado</div><div class="g-card-sub">EU / US / CM</div></div>
+      </div>
+      <div class="g-shoe-grid">
+        <div class="g-shoe-item"><div class="g-shoe-eu">39</div><div class="g-shoe-us">US 7</div><div class="g-shoe-cm">25 cm</div></div>
+        <div class="g-shoe-item"><div class="g-shoe-eu">40</div><div class="g-shoe-us">US 8</div><div class="g-shoe-cm">26 cm</div></div>
+        <div class="g-shoe-item"><div class="g-shoe-eu">41</div><div class="g-shoe-us">US 9</div><div class="g-shoe-cm">27 cm</div></div>
+        <div class="g-shoe-item"><div class="g-shoe-eu">42</div><div class="g-shoe-us">US 10</div><div class="g-shoe-cm">28 cm</div></div>
+      </div>
+    </div>
+  </div>
 
   <!-- CAMISAS -->
-
-  <section class="guia-section">
-
-    <div class="guia-img">
-      <img th:src="@{/img/cms.png}" alt="Guía Camisas">
+  <div class="g-section" id="sec-camisas">
+    <div class="g-card">
+      <div class="g-card-header">
+        <div class="g-card-icon"><i class="ti ti-shirt" aria-hidden="true"></i></div>
+        <div><div class="g-card-title">Tallas Superiores</div><div class="g-card-sub">Camisas y Polos</div></div>
+      </div>
+      <div class="g-tip">
+        <div class="g-tip-dot"></div>
+        <p>Mide el contorno del pecho en la parte más ancha, pasando por las axilas, y la cintura en su punto más estrecho.</p>
+      </div>
+      <div class="g-table-wrap">
+        <table>
+          <thead><tr><th>Talla</th><th>Pecho</th><th>Cintura</th></tr></thead>
+          <tbody id="tb-camisas">
+            <tr data-talla="S"><td><span class="badge-talla">S</span></td><td>88 – 94 cm</td><td>74 – 80 cm</td></tr>
+            <tr data-talla="M"><td><span class="badge-talla">M</span></td><td>95 – 102 cm</td><td>81 – 88 cm</td></tr>
+            <tr data-talla="L"><td><span class="badge-talla">L</span></td><td>103 – 110 cm</td><td>89 – 96 cm</td></tr>
+            <tr data-talla="XL"><td><span class="badge-talla">XL</span></td><td>111 – 118 cm</td><td>97 – 104 cm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="g-finder">
+        <div class="g-finder-label">Encuentra tu talla</div>
+        <div class="g-finder-row">
+          <select id="pecho-input">
+            <option value="">Pecho (cm)</option>
+            <option value="90">90 cm</option>
+            <option value="98">98 cm</option>
+            <option value="106">106 cm</option>
+            <option value="114">114 cm</option>
+          </select>
+          <div class="g-finder-result" id="pecho-result">Selecciona tu medida</div>
+        </div>
+      </div>
+      <div class="g-measure">
+        <div class="g-measure-label">Cómo medirte</div>
+        <div class="g-measure-steps">
+          <div class="g-step"><div class="g-step-num">1</div><p>Usa una cinta métrica flexible</p></div>
+          <div class="g-step"><div class="g-step-num">2</div><p>Rodea el pecho en la parte más ancha</p></div>
+          <div class="g-step"><div class="g-step-num">3</div><p>Mide la cintura en su punto más estrecho</p></div>
+        </div>
+      </div>
     </div>
-
-    <div class="guia-info">
-
-      <div class="guia-tag">Camisas & Polos</div>
- <p class="guia-intro">
-      Encuentra la talla perfecta para tus prendas.
-      Consulta nuestras medidas detalladas para camisas,
-      pantalones
-      <h2>Tallas Superiores</h2>
-
-
-       <table class="tabla-tallas">
-        <thead>
-          <tr>
-            <th>Talla</th>
-            <th>Pecho</th>
-            <th>Cintura</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>S</td>
-            <td>88 - 94 cm</td>
-            <td>74 - 80 cm</td>
-          </tr>
-
-          <tr>
-            <td>M</td>
-            <td>95 - 102 cm</td>
-            <td>81 - 88 cm</td>
-          </tr>
-
-          <tr>
-            <td>L</td>
-            <td>103 - 110 cm</td>
-            <td>89 - 96 cm</td>
-          </tr>
-
-
-            <tr>
-            <td>XL</td>
-            <td>111 - 118 cm</td>
-            <td>97 - 104 cm</td>
-          </tr>
-
-        </tbody>
-      </table>
-
-    </div>
-
-  </section>
+  </div>
 
   <!-- PANTALONES -->
-
-  <section class="guia-section reverse">
-
-    <div class="guia-info">
-
-      <div class="guia-tag">Pantalones</div>
-
-      <h2>Tallas Inferiores</h2>
-
-      <table class="tabla-tallas">
-        <thead>
-          <tr>
-            <th>Talla</th>
-            <th>Cintura</th>
-            <th>largo</th>
-
-          </tr>
-        </thead>
-
-
-
-
+  <div class="g-section" id="sec-pantalones">
+    <div class="g-card">
+      <div class="g-card-header">
+        <div class="g-card-icon"><i class="ti ti-ruler" aria-hidden="true"></i></div>
+        <div><div class="g-card-title">Tallas Inferiores</div><div class="g-card-sub">Pantalones</div></div>
+      </div>
+      <div class="g-tip">
+        <div class="g-tip-dot"></div>
+        <p>El largo se mide desde la entrepierna hasta el tobillo. La cintura se toma alrededor del ombligo, no de la cadera.</p>
+      </div>
+      <div class="g-table-wrap">
+        <table>
+          <thead><tr><th>Talla</th><th>Cintura</th><th>Largo</th></tr></thead>
           <tbody>
-          <tr>
-            <td>30</td>
-            <td>76 cm</td>
-            <td>92 cm</td>
-          </tr>
-
-          <tr>
-            <td>32</td>
-            <td>81 cm</td>
-            <td>97 cm</td>
-          </tr>
-
-          <tr>
-            <td>34</td>
-            <td>86 cm</td>
-            <td>102 cm</td>
-          </tr>
-
-          <tr>
-            <td>36</td>
-            <td>91 cm</td>
-            <td>107 cm</td>
-          </tr>
-
-        </tbody>
-      </table>
-
+            <tr><td><span class="badge-talla">30</span></td><td>76 cm</td><td>92 cm</td></tr>
+            <tr><td><span class="badge-talla">32</span></td><td>81 cm</td><td>97 cm</td></tr>
+            <tr><td><span class="badge-talla">34</span></td><td>86 cm</td><td>102 cm</td></tr>
+            <tr><td><span class="badge-talla">36</span></td><td>91 cm</td><td>107 cm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="g-finder">
+        <div class="g-finder-label">Encuentra tu talla</div>
+        <div class="g-finder-row">
+          <select id="cintura-input">
+            <option value="">Cintura (cm)</option>
+            <option value="76">76 cm</option>
+            <option value="81">81 cm</option>
+            <option value="86">86 cm</option>
+            <option value="91">91 cm</option>
+          </select>
+          <div class="g-finder-result" id="cintura-result">Selecciona tu medida</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-       <div class="guia-img">
-      <img th:src="@{/img/pn.png}" alt="Guía Pantalones">
+  <!-- CALZADO -->
+  <div class="g-section" id="sec-calzado">
+    <div class="g-card">
+      <div class="g-card-header">
+        <div class="g-card-icon"><i class="ti ti-shoe" aria-hidden="true"></i></div>
+        <div><div class="g-card-title">Guía de Calzado</div><div class="g-card-sub">EU / US / Centímetros</div></div>
+      </div>
+      <div class="g-tip">
+        <div class="g-tip-dot"></div>
+        <p>Mide tu pie en posición de pie, desde el talón hasta el dedo más largo. Si estás entre dos tallas, elige la mayor.</p>
+      </div>
+      <div class="g-shoe-grid">
+        <div class="g-shoe-item"><div class="g-shoe-eu">39</div><div class="g-shoe-us">US 7</div><div class="g-shoe-cm">25 cm</div></div>
+        <div class="g-shoe-item"><div class="g-shoe-eu">40</div><div class="g-shoe-us">US 8</div><div class="g-shoe-cm">26 cm</div></div>
+        <div class="g-shoe-item"><div class="g-shoe-eu">41</div><div class="g-shoe-us">US 9</div><div class="g-shoe-cm">27 cm</div></div>
+        <div class="g-shoe-item"><div class="g-shoe-eu">42</div><div class="g-shoe-us">US 10</div><div class="g-shoe-cm">28 cm</div></div>
+      </div>
+      <div class="g-finder">
+        <div class="g-finder-label">Convierte tu talla</div>
+        <div class="g-finder-row">
+          <select id="shoe-input">
+            <option value="">Selecciona EU</option>
+            <option value="39">EU 39</option>
+            <option value="40">EU 40</option>
+            <option value="41">EU 41</option>
+            <option value="42">EU 42</option>
+          </select>
+          <div class="g-finder-result" id="shoe-result">Elige una talla</div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-  </section>
-
-  <!-- ZAPATOS -->
-
-  <section class="guia-section">
-
-    <div class="guia-img">
-      <img th:src="@{/img/pie2.png}" alt="Guía Zapatos" >
-    </div>
-
-    <div class="guia-info">
-
-      <div class="guia-tag">Calzado</div>
-
-      <h2>Guía de Zapatos</h2>
-
-      <table class="tabla-tallas">
-        <thead>
-          <tr>
-            <th>EU</th>
-            <th>US</th>
-            <th>CM</th>
-          </tr>
-        </thead>
-
-         <tr>
-            <td>40</td>
-            <td>8</td>
-            <td>26 cm</td>
-          </tr>
-
-          <tr>
-            <td>41</td>
-            <td>9</td>
-            <td>27 cm</td>
-          </tr>
-
-          <tr>
-            <td>42</td>
-            <td>10</td>
-            <td>28 cm</td>
-          </tr>
-   <tbody>
-          <tr>
-            <td>39</td>
-            <td>7</td>
-            <td>25 cm</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-
-  </section>
-
-  </main>
-
+</main>
 
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+const tabs = document.querySelectorAll('.g-tab');
+const sections = document.querySelectorAll('.g-section');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.target;
+    sections.forEach(s => {
+      s.classList.remove('visible');
+      if (s.id === 'sec-' + target) s.classList.add('visible');
+    });
+  });
+});
+
+const pechoMap = { '90': 'S (88–94 cm)', '98': 'M (95–102 cm)', '106': 'L (103–110 cm)', '114': 'XL (111–118 cm)' };
+document.getElementById('pecho-input').addEventListener('change', function() {
+  const r = document.getElementById('pecho-result');
+  if (!this.value) { r.innerHTML = 'Selecciona tu medida'; return; }
+  r.innerHTML = 'Tu talla: <strong>' + (pechoMap[this.value] || '—') + '</strong>';
+  document.querySelectorAll('#tb-camisas tr').forEach(tr => tr.classList.remove('highlight'));
+  const map = { '90':'S','98':'M','106':'L','114':'XL' };
+  const talla = map[this.value];
+  if (talla) {
+    const row = document.querySelector('#tb-camisas tr[data-talla="'+talla+'"]');
+    if (row) row.classList.add('highlight');
+  }
+});
+
+const cinturaMap = { '76': '30', '81': '32', '86': '34', '91': '36' };
+const cinturaLargo = { '76': '92 cm', '81': '97 cm', '86': '102 cm', '91': '107 cm' };
+document.getElementById('cintura-input').addEventListener('change', function() {
+  const r = document.getElementById('cintura-result');
+  if (!this.value) { r.innerHTML = 'Selecciona tu medida'; return; }
+  r.innerHTML = 'Talla <strong>' + cinturaMap[this.value] + '</strong> · Largo ' + cinturaLargo[this.value];
+});
+
+const shoeData = { '39': 'US 7 · 25 cm', '40': 'US 8 · 26 cm', '41': 'US 9 · 27 cm', '42': 'US 10 · 28 cm' };
+document.getElementById('shoe-input').addEventListener('change', function() {
+  const r = document.getElementById('shoe-result');
+  if (!this.value) { r.innerHTML = 'Elige una talla'; return; }
+  r.innerHTML = '<strong>EU ' + this.value + '</strong> = ' + shoeData[this.value];
+});
+</script>
 
 </body>
 </html>

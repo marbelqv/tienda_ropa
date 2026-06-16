@@ -262,7 +262,7 @@ function openProductModal(id) {
 
       // ── Badge ──
       var badgeHtml = p.badge
-        ? '<span class="product-badge badge-sale" style="position:static;display:inline-block;margin-bottom:10px;">' + p.badge + '</span><br>'
+        ? '<span class="product-badge badge-sale" "">' + p.badge + '</span><br>'
         : '';
 
       // ── Precio ──

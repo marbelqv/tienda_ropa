@@ -198,8 +198,7 @@
     z-index: 2;
 }
 
-.product-badge { left: 12px; background: #111; }
-.badge-sale { background: #c0392b; }
+
 .product-descuento-badge { right: 12px; background: #9b7b65; }
 
 /* BODY — flex para empujar botones al fondo */
