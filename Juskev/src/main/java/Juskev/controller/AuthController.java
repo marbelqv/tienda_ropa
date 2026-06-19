@@ -58,8 +58,12 @@ public class AuthController {
             Authentication auth = authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
+            /*ra.addFlashAttribute("mensajeBienvenida", "¡Bienvenido, " + nombre + "!");
+            return "redirect:/";*/
+
+
             ra.addFlashAttribute("mensajeBienvenida", "¡Bienvenido, " + nombre + "!");
-            return "redirect:/";
+return "redirect:/auth/login?bienvenido=" + nombre;
         } catch (IllegalArgumentException e) {
             ra.addFlashAttribute("errorRegistro", e.getMessage());
             return "redirect:/auth/login?tab=registro";

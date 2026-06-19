@@ -18,7 +18,7 @@
       <div class="login-logo"><img th:src="@{/img/logo.png}" alt="JUSKEV"></div>
       <div class="login-subtitle">Accede a tu cuenta</div>
 
-      <div th:if="${errorRegistro}" class="alert-error" th:text="${errorRegistro}"></div>
+    <!--  <div th:if="${errorRegistro}" class="alert-error" th:text="${errorRegistro}"></div>--> 
 
       <div class="login-tabs">
         <button class="login-tab" id="tabBtnLogin"
@@ -34,7 +34,8 @@
            th:classappend="${param.tab == null or param.tab[0] != 'registro'} ? 'active'">
         <form th:action="@{/auth/login}" method="post">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-          <div th:if="${param.error}" class="alert-error">Correo o contraseña incorrectos.</div>
+        <!-- LOGIN    <div th:if="${param.error}" class="alert-error">Correo o contraseña incorrectos.</div>-->
+
           <div class="form-group">
             <label class="form-label">Correo Electrónico</label>
             <input type="email" name="email" class="form-input" placeholder="tu@correo.com" required>
@@ -82,6 +83,50 @@
       document.getElementById('tabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
       document.getElementById('tab-' + tab).classList.add('active');
     }
+    
   </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script th:if="${param.error}">
+Swal.fire({
+    title: 'Acceso denegado',
+    text: 'Correo o contraseña incorrectos',
+    icon: 'error',
+    background: '#111111',
+    color: '#ffffff',
+    confirmButtonColor: '#8B6B3D'
+});
+</script>
+
+<script th:if="${errorRegistro}">
+Swal.fire({
+    title: 'Atención',
+    text: '[[${errorRegistro}]]',
+    icon: 'warning',
+    background: '#111111',
+    color: '#ffffff',
+    confirmButtonColor: '#8B6B3D'
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script th:if="${param.bienvenido}">
+Swal.fire({
+    title: '¡Bienvenido a JUSKEV!',
+    html: '<b>[[${param.bienvenido[0]}]]</b><br>Tu estilo comienza aquí.',
+    icon: 'success',
+    background: '#111111',
+    color: '#ffffff',
+    confirmButtonColor: '#8B6B3D',
+    confirmButtonText: 'Entrar',
+    timer: 3500,
+    timerProgressBar: true
+});
+</script>
+
 </body>
 </html>
