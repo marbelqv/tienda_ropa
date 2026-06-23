@@ -114,11 +114,11 @@ public class AdminController {
     }
 
     // ─── CLIENTES ───
-    @GetMapping("/clientes")
+    @GetMapping("/Clientes")
     public String clientes(Model model, HttpServletRequest request) {
         model.addAttribute("currentUri", request.getRequestURI());
-        model.addAttribute("clientes", usuarioService.obtenerTodosLosClientes());
-        return "admin/clientes";
+        model.addAttribute("Clientes", usuarioService.obtenerTodosLosClientes());
+        return "admin/Clientes";
     }
 
     // ─── PEDIDOS ───
