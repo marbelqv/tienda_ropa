@@ -86,7 +86,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**", "/cliente/pedido/**")
+                .ignoringRequestMatchers("/api/**", "/cliente/**")
             );
 
         return http.build();
