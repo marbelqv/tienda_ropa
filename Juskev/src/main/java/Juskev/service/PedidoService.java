@@ -48,6 +48,10 @@ public class PedidoService {
             }
 
             BigDecimal precioUnitario = producto.getPrecioFinal();
+            if (precioUnitario == null) {
+                throw new IllegalStateException("Precio inválido para: " + producto.getNombre());
+            }
+
             DetallePedido detalle = DetallePedido.builder()
                 .pedido(pedido)
                 .producto(producto)
