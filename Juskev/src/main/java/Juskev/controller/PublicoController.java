@@ -82,7 +82,7 @@ public class PublicoController {
 
     @GetMapping("/checkout")
     public String checkout() {
-        return "pages/checkout";
+        return "pages/Checkout";
     }
 
     @GetMapping("/guia-tallas")
